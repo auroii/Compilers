@@ -1,6 +1,10 @@
-all: lexical.o utils.o tester.o test
+all: lexical.o utils.o Parser.o tester.o test
 
 
+
+
+Parser.o: Parser.cpp Parser.h lexical.h utils.h
+	g++ -std=c++17 -c Parser.cpp
 
 lexical.o: lexical.cpp lexical.h utils.h
 	g++ -std=c++17 -c lexical.cpp
