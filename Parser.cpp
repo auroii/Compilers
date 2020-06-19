@@ -87,10 +87,12 @@ bool Parser::corpo_p() {
     if(!DC_loc()) return false;
     SS beg;
     Get(beg);
+    D(beg.token);
     if(beg.token != "begin") return false;
     if(!comandos()) return false;
     SS end;
     Get(end);
+    D(end.token);
     if(end.token != "end") return false;
     SS pv;
     Get(pv);
@@ -111,7 +113,7 @@ bool Parser::DCP() {
     D(Id.token);
     if(Id.token != "Id" || !parametros()) return false;
     Get(p);
-    if(p.token != ";" || corpo_p()) return false;
+    if(p.token != ";" || !corpo_p()) return false;
 
 
     return DCP();
@@ -293,6 +295,9 @@ bool Parser::cmd() {
         D(at.token);
         if(at.token == ":=") {
             return expressao(); //por hora
+        } else {
+            index--;
+            return lista_arg();
         }
 
     }
@@ -317,18 +322,6 @@ bool Parser::cmd() {
         D(d.token);
         if(d.token != "do") return false;
         return cmd();
-    }
-
-
-    if(tCmd.token == "Id") {
-        SS eq;
-        Get(eq);
-        if(eq.token == ":=") {
-            return expressao();
-        } else {
-            index--;
-            return lista_arg();
-        }
     }
 
     return true;
