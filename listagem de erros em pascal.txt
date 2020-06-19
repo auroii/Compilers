@@ -1,0 +1,335 @@
+1.0Error: Type mismatch
+This can happen in many cases:
+The variable assined to is of a different type than the expression in the assignment.
+The user is calling a function or procedure with parameters that are incompatible with the parameters in the function or procedure definition.
+
+2.0Error: Incompatible types: got ”arg1” expected ”arg2”
+There is no conversion possible between the two types. Another possiblity is that they are declared in different declarations:
+ Var  
+    A1 : Array[1..10] Of Integer;  
+    A2 : Array[1..10] Of Integer;  
+ 
+ Begin  
+    A1:=A2; { This statement also gives this error. It  
+              is due to the strict type checking of P-- }  
+ End.  
+ 
+3.0Error: Type mismatch between ”arg1” and ”arg2”
+The types are not equal.
+
+4.0Error: Type identifier expected
+The identifier is not a type, or the user forgot to supply a type identifier.
+
+5.0Error: Variable identifier expected
+This happens when the user pass a constant to a routine (such as Inc var or Dec) when it expects a variable. You can only pass variables as arguments to these functions.
+
+6.0Error: Integer expression expected, but got ”arg1”
+The compiler expects an expression of type integer, but gets a different type.
+
+7.0Error: Boolean expression expected, but got ”arg1”
+The expression must be a boolean type. It should be return True or False.
+
+8.0Error: Ordinal expression expected
+The expression must be of ordinal type, i.e., maximum a Longint. This happens, for instance, when you specify a second argument to Inc or Dec that doesn’t evaluate to an ordinal value.
+
+9.0Error: pointer type expected, but got ”arg1”
+The variable or expression isn’t of the type pointer. This happens when the user pass a variable that isn’t a pointer to New or Dispose.
+
+10.Error: class type expected, but got ”arg1”
+The variable or expression isn’t of the type class. This happens typically when
+The parent class in a class declaration isn’t a class.
+An exception handler (On) contains a type identifier that isn’t a class.
+
+11.Error: Can’t evaluate constant expression
+This error can occur when the bounds of an array you declared do not evaluate to ordinal constants.
+
+12.Error: Set elements are not compatible
+You are trying to perform an operation on two sets, when the set element types are not the same. The base type of a set must be the same when taking the union.
+
+13.Error: Operation not implemented for sets
+several binary operations are not defined for sets. These include: div, mod, **, >= and <=. The last two may be defined for sets in the future.
+Warning: Automatic type conversion from floating type to COMP which is an integer type
+An implicit type conversion from a real type to a comp is encountered. Since comp is a 64 bit integer type, this may indicate an error.
+Hint: use DIV instead to get an integer result
+When hints are on, then an integer division with the ’/’ operator will produce this message, because the result will then be of type real.
+
+14.Error: String types have to match exactly in $V+ mode
+When compiling in {$V+} mode, the string you pass as a parameter should be of the exact same type as the declared parameter of the procedure.
+
+15.Error: succ or pred on enums with assignments not possible
+If you declare an enumeration type which has C-like assignments in it, such as in the following:
+   Tenum = (a,b,e:=5);  
+then you cannot use the Succ or Pred functions with this enumeration.
+
+16.Error: Can’t read or write variables of this type
+The user is trying to read or write a variable from or to a file of type text, which doesn’t support that variable’s type. Only integer types, reals, pchars and strings can be read from or written to a text file. Booleans can only be written to text files.
+
+17.Error: Can’t use readln or writeln on typed file
+readln and writeln are only allowed for text files.
+
+18.Error: Can’t use read or write on untyped file.
+read and write are only allowed for text or typed files.
+
+19.Error: Type conflict between set elements
+There is at least one set element which is of the wrong type, i.e. not of the set type.
+Warning: lo/hi(dword/qword) returns the upper/lower word/dword
+Free P-- supports an overloaded version of lo/hi for longint/dword/int64/qword which returns the lower/upper word/dword of the argument. Turbo P-- always uses a 16 bit lo/hi which always returns bits 0..7 for lo and the bits 8..15 for hi. If you want the Turbo P-- behavior you have to type cast the argument to a word or integer.
+
+20.Error: Integer or real expression expected
+The first argument to str must be a real or integer type.
+
+21.Error: Wrong type ”arg1” in array constructor
+The user is trying to use a type in an array constructor which is not allowed.
+
+22.Error: Incompatible type for arg no. arg1: Got ”arg2”, expected ”arg3”
+The user is trying to pass an invalid type for the specified parameter.
+
+23.Error: Method (variable) and Procedure (variable) are not compatible
+You cannot assign a method to a procedure variable or a procedure to a method pointer.
+
+24.Error: Illegal constant passed to internal math function
+The constant argument passed to a ln or sqrt function is out of the definition range of these functions.
+
+25.Error: Can’t take the address of constant expressions
+It is not possible to get the address of a constant expression, because they are not stored in memory. The user can try making it a typed constant. This error can also be displayed if you try to pass a property to a var parameter.
+
+26.Error: Argument cannot be assigned to
+Only expressions which can be on the left side of an assignment can be passed as call by reference arguments.
+Remark: Properties can be used on the left side of an assignment, nevertheless they cannot be used as arguments.
+
+27.Error: Can’t assign local procedure/function to procedure variable
+It’s not allowed to assign a local procedure/function to a procedure variable, because the calling convention of a local procedure/function is different. You can only assign local procedure/function to a void pointer.
+
+28.Error: Can’t assign values to an address
+It is not allowed to assign a value to an address of a variable, constant, procedure or function. The user can try compiling with -So if the identifier is a procedure variable.
+
+29.Error: Can’t assign values to const variable
+It’s not allowed to assign a value to a variable which is declared as a const. This is normally a parameter declared as const. To allow changing the value, pass the parameter by value, or a parameter by reference (using var).
+
+30.Error: Array type required
+If you are accessing a variable using an index ’[¡x¿]’ then the type must be an array. In FPC mode a pointer is also allowed.
+
+31.Error: interface type expected, but got ”arg1”
+The compiler expected to encounter an interface type name, but got something else. The following code would produce this error:
+ Type  
+   TMyStream = Class(TStream,Integer)  
+Hint: Mixing signed expressions and longwords gives a 64bit result
+If you divide (or calculate the modulus of) a signed expression by a longword (or vice versa), or if you have overflow and/or range checking turned on and use an arithmetic expression (+, -, *, div, mod) in which both signed numbers and longwords appear, then everything has to be evaluated in 64-bit arithmetic which is slower than normal 32-bit arithmetic. You can avoid this by typecasting one operand so it matches the result type of the other one.
+Warning: Mixing signed expressions and cardinals here may cause a range check error
+If you use a binary operator (and, or, xor) and one of the operands is a longword while the other one is a signed expression, then, if range checking is turned on, you may get a range check error because in such a case both operands are converted to longword before the operation is carried out. You can avoid this by typecasting one operand so it matches the result type of the other one.
+
+32.Error: Typecast has different size (arg1 -¿ arg2) in assignment
+Type casting to a type with a different size is not allowed when the variable is used in an assignment.
+
+33.Error: enums with assignments cannot be used as array index
+When you declared an enumeration type which has C-like assignments, such as in the following:
+   Tenum = (a,b,e:=5);  
+ 
+you cannot use it as the index of an array.
+
+34.Error: Class or Object types ”arg1” and ”arg2” are not related
+There is a typecast from one class or object to another while the class/object are not related. This will probably lead to errors.
+Warning: Class types ”arg1” and ”arg2” are not related
+There is a typecast from one class to another while the classes are not related. This will probably lead to errors.
+
+35.Error: Class or interface type expected, but got ”arg1”
+The compiler expected a class or interface name, but got another type or identifier.
+
+36.Error: Type ”arg1” is not completely defined
+This error occurs when a type is not complete: i.e. a pointer type which points to an undefined type.
+Warning: String literal has more characters than short string length
+The size of the constant string, which is assigned to a shortstring, is longer than the maximum size of the shortstring (255 characters).
+Warning: Comparison might be always false due to range of constant and expression
+There is a comparison between a constant and an expression where the constant is out of the valid range of values of the expression. Because of type promotion, the statement will always evaluate to false. Explicitly typecast the constant or the expression to the correct range to avoid this warning if you think the code is correct.
+Warning: Comparison might be always true due to range of constant and expression
+There is a comparison between a constant and an expression where the constant is out of the valid range of values of the expression. Because of type promotion, the statement will always evaluate to true. Explicitly typecast the constant or the expression to the correct range to avoid this warning if you think the code is correct.
+Warning: Constructing a class ”arg1” with abstract method ”arg2”
+An instance of a class is created which contains non-implemented abstract methods. This will probably lead to a runtime error 211 in the code if that routine is ever called. All abstract methods should be overridden.
+Hint: The left operand of the IN operator should be byte sized
+The left operand of the in operator is not an ordinal or enumeration which fits within 8 bits. This may lead to range check errors. The in operator currently only supports a left operand which fits within a byte. In the case of enumerations, the size of an element of an enumeration can be controlled with the {$PACKENUM} or {$Zn} switches.
+Warning: Type size mismatch, possible loss of data / range check error
+There is an assignment to a smaller type than the source type. This means that this may cause a range-check error, or may lead to possible loss of data.
+Hint: Type size mismatch, possible loss of data / range check error
+There is an assignment to a smaller type than the source type. This means that this may cause a range-check error, or may lead to possible loss of data.
+
+37.Error: The address of an abstract method cannot be taken
+An abstract method has no body, so the address of an abstract method cannot be taken.
+
+38.Error: Assignments to formal parameters and open arrays are not possible
+The user is trying to assign a value to a formal (untyped var, const or out) parameter, or to an open array.
+
+39.Error: Constant Expression expected
+The compiler expects an constant expression, but gets a variable expression.
+
+40.Error: Operation ”arg1” not supported for types ”arg2” and ”arg3”
+The operation is not allowed for the supplied types.
+
+41.Error: Illegal type conversion: ”arg1” to ”arg2”
+When doing a type-cast, you must take care that the sizes of the variable and the destination type are the same.
+Hint: Conversion between ordinals and pointers is not portable
+If the user typecast a pointer to a longint (or vice-versa), this code will not compile on a machine using 64 bits addressing.
+Warning: Conversion between ordinals and pointers is not portable
+If the user typecast a pointer to an ordinal type of a different size (or vice-versa), this can cause problems. This is a warning to help in finding the 32-bit specific code where cardinal/longint is used to typecast pointers to ordinals. A solution is to use the ptrint/ptruint types instead.
+
+42.Error: Can’t determine which overloaded function to call
+You’re calling overloaded functions with a parameter that doesn’t correspond to any of the declared function parameter lists. e.g. when you have declared a function with parameters word and longint, and then you call it with a parameter which is of type integer.
+
+43.Error: Illegal counter variable
+The type of a for loop variable must be an ordinal type. Loop variables cannot be reals or strings.
+Warning: Converting constant real value to double for C variable argument, add explicit typecast to prevent this.
+In C, constant real values are double by default. For this reason, if you pass a constant real value to a variable argument part of a C function, FPC by default converts this constant to double as well. If you want to prevent this from happening, add an explicit typecast around the constant.
+
+44.Error: Class or COM interface type expected, but got ”arg1”
+Some operators, such as the AS operator, are only applicable to classes or COM interfaces.
+
+45.Error: Constant packed arrays are not yet supported
+The user cannot declare a (bit)packed array as a typed constant.
+
+46.Error: Incompatible type for arg no. arg1: Got ”arg2” expected ”(Bit)Packed Array”
+The compiler expects a (bit)packed array as the specified parameter.
+
+47.Error: Incompatible type for arg no. arg1: Got ”arg2” expected ”(not packed) Array”
+The compiler expects a regular (i.e., not packed) array as the specified parameter.
+
+48.Error: Elements of packed arrays cannot be of a type which need to be initialised
+Support for packed arrays of types that need initialization (such as ansistrings, or records which contain ansistrings) is not yet implemented.
+
+49.Error: Constant packed records and objects are not yet supported
+You cannot declare a (bit)packed array as a typed constant at this time.
+Warning: Arithmetic ”arg1” on untyped pointer is unportable to {$T+}, suggest typecast
+Addition/subtraction from an untyped pointer may work differently in {$T+}. Use a typecast to a typed pointer.
+
+50.Error: Can’t take address of a subroutine marked as local
+The address of a subroutine marked as local cannot be taken.
+
+51.Error: Can’t export subroutine marked as local from a unit
+A subroutine marked as local cannot be exported from a unit.
+
+52.Error: Type is not automatable: ”arg1”
+Only byte, integer, longint, smallint, currency, single, double, ansistring, widestring, tdatetime, variant, olevariant, wordbool and all interfaces are automatable.
+Hint: Converting the operands to ”arg1” before doing the add could prevent overflow errors.
+Adding two types can cause overflow errors. Since you are converting the result to a larger type, you could prevent such errors by converting the operands to this type before doing the addition.
+Hint: Converting the operands to ”arg1” before doing the subtract could prevent overflow errors.
+Subtracting two types can cause overflow errors. Since you are converting the result to a larger type, you could prevent such errors by converting the operands to this type before doing the subtraction.
+Hint: Converting the operands to ”arg1” before doing the multiply could prevent overflow errors.
+Multiplying two types can cause overflow errors. Since you are converting the result to a larger type, you could prevent such errors by converting the operands to this type before doing the multiplication.
+Warning: Converting pointers to signed integers may result in wrong comparison results and range errors, use an unsigned type instead.
+The virtual address space on 32-bit machines runs from $00000000 to $ffffffff. Many operating systems allow you to allocate memory above $80000000. For example both Windows and linux allow pointers in the range $0000000 to $bfffffff. If you convert pointers to signed types, this can cause overflow and range check errors, but also $80000000 ¡ $7fffffff. This can cause random errors in code like ”if p¿q”.
+
+53.Error: Interface type arg1 has no valid GUID
+When applying the as-operator to an interface or class, the desired interface (i.e. the right operand of the as-operator) must have a valid GUID.
+
+54.Error: Invalid selector name ”arg1”
+An Objective-C selector cannot be empty, must be a valid identifier or a single colon, and if it contains at least one colon it must also end in one.
+
+55.Error: Expected Objective-C method, but got arg1
+A selector can only be created for Objective-C methods, not for any other kind of procedure/function/method.
+
+56.Error: Expected Objective-C method or constant method name
+A selector can only be created for Objective-C methods, either by specifying the name using a string constant, or by using an Objective-C method identifier that is visible in the current scope.
+
+57.Error: No type info available for this type
+Type information is not generated for some types, such as enumerations with gaps in their value range (this includes enumerations whose lower bound is different from zero).
+
+58.Error: Ordinal or string expression expected
+The expression must be an ordinal or string type.
+
+59.Error: String expression expected
+The expression must be a string type.
+Warning: Converting 0 to NIL
+Use NIL rather than 0 when initialising a pointer.
+
+60.Error: Objective-C protocol type expected, but got ”arg1”
+The compiler expected a protocol type name, but found something else.
+
+61.Error: The type ”arg1” is not supported for interaction with the Objective-C runtime.
+Objective-C makes extensive use of run time type information (RTTI). This format is defined by the maintainers of the run time and can therefore not be adapted to all possible Object P-- types. In particular, types that depend on reference counting by the compiler (such as ansistrings and certain kinds of interfaces) cannot be used as fields of Objective-C classes, cannot be directly passed to Objective-C methods, and cannot be encoded using objc_encode.
+
+62.Error: Class or objcclass type expected, but got ”arg1”
+It is only possible to create class reference types of class and objcclass
+
+63.Error: Objcclass type expected
+The compiler expected an objcclass type
+Warning: Coerced univ parameter type in procedural variable may cause crash or memory corruption: arg1 to arg2
+univ parameters are implicitly compatible with all types of the same size, also in procedural variable definitions. That means that the following code is legal, because single and longint have the same size:
+ {$mode macpas}  
+ Type  
+   TIntProc = procedure (l: univ longint);  
+ 
+   procedure test(s: single);  
+     begin  
+       writeln(s);  
+     end;  
+ 
+   var  
+     p: TIntProc;  
+   begin  
+     p:=test;  
+     p(4);  
+   end.  
+ 
+This code may however crash on platforms that pass integers in registers and floating point values on the stack, because then the stack will be unbalanced. Note that this warning will not flagg all potentially dangerous situations. when test returns.
+
+64.Error: Type parameters of specializations of generics cannot reference the currently specialized type
+Recursive specializations of generics like Type MyType = specialize MyGeneric<MyType>; are not possible.
+
+65.Error: Type parameters are not allowed on non-generic class/record/object procedure or function
+Type parameters are only allowed for methods of generic classes, records or objects
+
+66.Error: Generic declaration of ”arg1” differs from previous declaration
+Generic declaration does not match the previous declaration
+
+67.Error: Helper type expected
+The compiler expected a class helper type.
+
+68.Error: Record type expected
+The compiler expected a record type.
+
+69.Error: Derived class helper must extend a subclass of ”arg1” or the class itself
+If a class helper inherits from another class helper the extended class must extend either the same class as the parent class helper or a subclass of it
+
+70.Error: Derived record or type helper must extend ”arg1”
+If a record helper inherits from another record helper it must extend the same record that the parent record helper extended.
+
+71.Error: Invalid assignment, procedures return no value
+This error occurs when one tries to assign the result of a procedure or destructor call. A procedure or destructor returns no value so this is not possible.
+Warning: Implicit string type conversion from ”arg1” to ”arg2”
+An implicit type conversion from an ansi string type to an unicode string type is encountered. To avoid this warning perform an explicit type conversion.
+Warning: Implicit string type conversion with potential data loss from ”arg1” to ”arg2”
+An implicit type conversion from an unicode string type to an ansi string type is encountered. This conversion can lose data since not all unicode characters may be represented in the codepage of destination string type.
+Warning: Explicit string typecast from ”arg1” to ”arg2”
+An explicit typecast from an ansi string type to an unicode string type is encountered. This warning is off by default. You can turn it on to see all suspicious string conversions.
+Warning: Explicit string typecast with potential data loss from ”arg1” to ”arg2”
+An explicit typecast from an unicode string type to an ansi string type is encountered. This conversion can lose data since not all unicode characters may be represented in the codepage of destination string type. This warning is off by default. You can turn it on to see all the places with lossy string conversions.
+Warning: Unicode constant cast with potential data loss
+Conversion from a WideChar to AnsiChar can lose data since now all unicode characters may be represented in the current system codepage You can nest function definitions only 31 levels deep.
+
+72.Error: range check error while evaluating constants (arg1 must be between arg2 and arg3)
+Warning: range check error while evaluating constants (arg1 must be between arg2 and arg3)
+The constants are outside their allowed range.
+
+73.Error: This type is not supported for the Default() intrinsic
+Some types like for example Text and File Of X are not supported by the Default intrinsic.
+
+74.Error: JVM virtual class methods cannot be static
+Virtual class methods cannot be static when targetting the JVM platform, because the self pointer is required for correct dispatching.
+
+75.Error: Final (class) fields can only be assigned in their class’ (class) constructor
+It is only possible to assign a value to a final (class) field inside a (class) constructor of its owning class.
+
+76.Error: It is not possible to typecast untyped parameters on managed platforms, simply assign a value to them instead.
+On managed platforms, untyped parameters are translated by the compiler into the equivalent of var x: BaseClassType. Non-class-based types passed to such parameters are automatically wrapped (or boxed) in a class, and after the call the potentially modified value is assigned back to the original variable. On the caller side, changing untyped var/out parameters happens by simply assigning values to them (either class-based or primitive ones). On the caller side, they will be extracted and if their type does not match the original variable’s, an exception will be raised.
+
+77.Error: The assignment side of an expression cannot be typecasted to a supertype on managed platforms
+Managed platforms guarantee type safety at the bytecode level. This means that the virtual machine must be able to statically determine that no type-unsafe assignments or operations occur. By assigning a parent class type to a variable of a child type by typecasting the assignment side to the parent class type, the type safety would no longer be guaranteed and the generated code would fail verification at run time time.
+Warning: The interface method ”arg1” raises the visibility of ”arg2” to public when accessed via an interface instance
+
+78.Error: The interface method ”arg1” has a higher visibility (public) than ”arg2”
+All methods in an interface have always public visibility. That means that if an interface method is implemented using a (strict) protected or private method, this method is actually publicly accessible via the interface. On the JVM target this situation results in an error because the JVM rejects such attempts to circumvent the visibility rules. On other targets this is a warning that is disabled by default because such situations are common practice, but it can be enabled in case you are concerned with keeping your code compilable for the JVM target.
+
+79.Error: TYPEOF can only be used on object types with VMT
+Typeof() intrinsic returns pointer to VMT of its argument. It cannot be used on object types that do not have VMT.
+
+80.Error: It is not possible to define a default value for a parameter of type ”arg1”
+Parameters declared as structured types, such as files, variants, non-dynamic arrays and TP-style objects, cannot have a default value.
+
