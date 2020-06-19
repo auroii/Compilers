@@ -18,6 +18,15 @@ private:
     bool DCV();
     bool variaveis();
     bool mais_var();
+    bool comandos();
+    bool cmd();
+    bool expressao();
+    bool termo();
+    bool fator();
+    bool mais_fatores();
+    bool outros_termos();
+    bool op_un();
+    
     int line;
     int index;
     vector<pair<string, string>> v;
