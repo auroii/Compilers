@@ -192,7 +192,7 @@ std::pair<std::string, std::string> Lexical::analyser(const std::string& source,
 	}
 
 
-	if((int) source.size() == pointer) return {"", ""}; //esta no final do codigo fonte
+	if((int) source.size() == pointer) return {"", "-1"}; //esta no final do codigo fonte
 
 	if(isdigit(source[pointer])) { //se o primeiro caracter for um digito numerico
 		return process_number(source, pointer);

@@ -3,19 +3,35 @@
 
 #include "lexical.h"
 #include <string>
+#include <vector>
 
+using std::vector;
 using std::string;
+using std::pair;
 
 class Parser {
+private:
+
+    void Get(pair<string, string> &);
+    bool corpo();
+    bool DC();
+    bool DCV();
+    bool variaveis();
+    bool mais_var();
+    int line;
+    int index;
+    vector<pair<string, string>> v;
+
 public:
     Lexical *l;
-    static int line = 0;
-    Parser(const std::vector<std::string>& cmd_table);
+    
+    Parser(const std::vector<std::string>& cmd_table, const string&);
 
 
-    bool start(const string&, int);
-    bool corpo(const string& src, int pointer);
+    bool start();
 
+
+    int getLine() { return line;}
 
 };
 

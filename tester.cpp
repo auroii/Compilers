@@ -22,13 +22,13 @@ int main(int argc, char **argv) {
 	src.pop_back();
 	//std::cerr << src;
 
-	Parser *pa = new Parser(cmd_table); //instancia um objetivo analisador lexico
+	Parser *pa = new Parser(cmd_table, src); //instancia um objetivo analisador lexico
 	
 
 	int pointer = 0;//ponteiro que indica a posicao atual no programa
 	std::pair<std::string, std::string> p;
 	
-	std::cerr << pa->start(src, pointer) << '\n';
+	std::cerr << pa->start() << '\n';
 	
 	/*std::list<std::pair<std::string, std::string>> token_table; //lista de pares (cadeia, token)
 	//loop para ir recuperando de token em token 
