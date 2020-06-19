@@ -141,7 +141,16 @@ bool Parser::cmd() {
     D(tCmd.token);
     SS bo, bc;
 
-    if(tCmd.token[0] == 'r') {
+
+    if(tCmd.token[0] == 'b') {
+        if(!comandos()) return false;
+        SS e;
+        Get(e);
+        return (e.token == "end");
+    }
+
+
+    if(tCmd.token[0] == 'r' || tCmd.token == "write") {
         Get(bo);
         D(bo.token);
         if(!variaveis()) return false;
@@ -149,6 +158,21 @@ bool Parser::cmd() {
         D(bc.token);
         if(bo.token != "(" || bc.token != ")") return false; 
     }
+
+
+    if(tCmd.token == "while") {
+        Get(bo);
+        D(bo.token);
+        if(!condicao()) return false;
+        Get(bc);
+        D(bc.token);
+        SS d;
+        Get(d);
+        D(d.token);
+        if(d.token != "do" && bo.token != "(" || bc.token != ")") return false; 
+        return cmd();
+    }
+
 
     if(tCmd.token == "Id") {
         SS at;
@@ -225,9 +249,18 @@ bool Parser::outros_termos() {
 }
 
 
+bool Parser::condicao() {
+    if(expressao()) {
+        SS rel;
+        Get(rel);
+        D(rel.token);
+        if(rel.token != "=" && rel.token != "<>" && rel.token != ">=" &&
+                rel.token != "<=" && rel.token != ">" && rel.token != "<") {
+                    return false;
+        }
 
-
-
-
-
+        return expressao();
+    }
+    return false;
+}
 

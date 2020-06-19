@@ -26,6 +26,7 @@ private:
     bool mais_fatores();
     bool outros_termos();
     bool op_un();
+    bool condicao();
     
     int line;
     int index;
