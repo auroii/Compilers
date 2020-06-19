@@ -31,7 +31,15 @@ private:
     bool DCC();
     bool DCP();
     bool tipo_var();
-
+    bool parametros();
+    bool lista_par();
+    bool mais_par();
+    bool corpo_p();
+    bool DC_loc();
+    bool mais_ident();
+    bool lista_arg();
+    bool argumentos();
+    
     int line;
     int index;
     vector<pair<string, string>> v;
