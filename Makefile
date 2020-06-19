@@ -14,12 +14,12 @@ utils.o: utils.cpp utils.h
 	g++ -std=c++17 -c utils.cpp
 
 
-tester.o: tester.cpp lexical.h utils.h
+tester.o: tester.cpp lexical.h utils.h Parser.h
 	g++ -std=c++17 -c tester.cpp
 
 
-test: utils.o lexical.o tester.o
-	g++ -std=c++17 utils.o lexical.o tester.o -o P--
+test: utils.o lexical.o Parser.o tester.o 
+	g++ -std=c++17 utils.o lexical.o Parser.o tester.o -o P--
 
 
 zip:
