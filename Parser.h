@@ -27,6 +27,7 @@ private:
     bool outros_termos();
     bool op_un();
     bool condicao();
+    bool pfalsa();
     
     int line;
     int index;

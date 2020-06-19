@@ -142,6 +142,15 @@ bool Parser::cmd() {
     SS bo, bc;
 
 
+    if(tCmd.token[0] == 'i') {
+        if(!condicao()) return false;
+        SS th;
+        Get(th);
+        D(th.token);
+        if(th.token != "then" || !(cmd() && pfalsa())) return false;
+        return true;
+    }
+
     if(tCmd.token[0] == 'b') {
         if(!comandos()) return false;
         SS e;
@@ -182,6 +191,28 @@ bool Parser::cmd() {
             return expressao(); //por hora
         }
 
+    }
+
+    if(tCmd.token == "for") {
+        SS i, rr;
+        Get(i);
+        Get(rr);
+        D(i.token);
+        D(rr.token);
+        if(i.token != "Id" || rr.token != ":=") return false;
+
+        if(!expressao()) return false;
+
+        SS tt;
+        Get(tt);
+        D(tt.token);
+        if(tt.token != "to" || !expressao()) return false;
+        
+        SS d;
+        Get(d);
+        D(d.token);
+        if(d.token != "do") return false;
+        return cmd();
     }
 
     return true;
@@ -264,3 +295,18 @@ bool Parser::condicao() {
     return false;
 }
 
+
+
+
+
+bool Parser::pfalsa() {
+    SS el;
+    Get(el);
+    if(el.token == "else") {
+        D(el.token);
+        return cmd();
+    }
+
+    index--;
+    return true;
+}
