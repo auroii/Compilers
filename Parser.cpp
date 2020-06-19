@@ -66,34 +66,67 @@ bool Parser::corpo() {
 }
 
 bool Parser::DC() {
-    SS dc;
-    Get(dc);
-    D(dc.token);
-    if(dc.token[0] == 'v') {
-        return DCV();
-    }
+    return (DCC() && DCV() && DCP());
+}
 
-    return false;
+
+bool Parser::tipo_var() {
+    SS type;
+    Get(type);
+    D(type.token);
+    return (type.token == "integer" || type.token == "real");
+}
+
+bool Parser::DCP() {
+
+}
+
+
+
+bool Parser::DCC() {
+    SS c;
+    Get(c);
+    if(c.token != "const") {
+        index--;
+        return true;
+    }
+    SS n, eq;
+    Get(c);
+    Get(eq);
+    Get(n);
+    D(c.token);
+    D(n.token);
+    D(eq.token);
+    if(c.token != "Id" || eq.token != "=" || (n.token != "real" && n.token != "integer")) {
+        return false;
+    }
+    SS pv;
+    Get(pv);
+    return DCC();
+
 }
 
 
 bool Parser::DCV() {
-    SS dp, type, pv;
-    variaveis();
+    SS var;
+    Get(var);
+    D(var.token);
+    if(var.token != "var") {
+        index--;
+        return true;
+    }
+
+    if(!variaveis()) return false;
+    SS dp;
     Get(dp);
-    Get(type);
-    Get(pv);
     D(dp.token);
-    D(type.token);
-
-    if(!(pv.token == ";" && dp.token == ":" && (type.token == "integer" || type.token == "real"))) return false;
-    SS beg;
-    Get(beg);
-    //D(beg.token);
-    if(beg.token == "begin") index--;
-    else DCV();
-
-    return true;
+    if(dp.token != ":") return false;
+    if(!tipo_var()) return false;
+    SS pv;
+    Get(pv);
+    D(pv.token);
+    if(pv.token != ";") return false;
+    return DCV();
 }
 
 bool Parser::variaveis() {

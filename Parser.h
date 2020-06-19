@@ -28,7 +28,10 @@ private:
     bool op_un();
     bool condicao();
     bool pfalsa();
-    
+    bool DCC();
+    bool DCP();
+    bool tipo_var();
+
     int line;
     int index;
     vector<pair<string, string>> v;
