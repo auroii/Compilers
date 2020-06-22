@@ -14,7 +14,14 @@ using std::set;
 class Parser {
 private:
 
+
+
     void Get(pair<string, string> &);
+
+
+    //todas as rotinas abaixo implementam a gramatica do pascal pelo algoritmo descendente recursivo, fazendo o uso do fato de que estão fatoradas
+    //e nao ha recursao a esquerda
+    //as rotinas com um interiro op de parametro sao aquelas que inserem o identificador de variaveis declaradas para inspecao posterior
     bool corpo();
     bool DC();
     bool DCV();
@@ -42,7 +49,7 @@ private:
     bool lista_arg();
     bool argumentos();
     
-    //ERROS
+    //ERROS ---> enumeracao para especificar que tipo de erro sintatico ocorreu
     enum {
         PONTO_VERGULA,
         ESTRUTURA,
@@ -55,22 +62,22 @@ private:
 
     };
 
-    void pError(int);
+    void pError(int); //funcao que recebe um inteiro mapeado pelo enum acima e printa um erro baseado neste inteiro
 
-    int line;
-    int index;
-    bool scannerError;
-    vector<pair<string, string>> v;
-    set<string> bag;
+    int line; //linha atual do codigo
+    int index; //token atual que o analisador lexico propocionou
+    bool scannerError; //flag que seta como true se um erro lexico foi encontrado
+    vector<pair<string, string>> v; //vetor de pares (nome, token) pós loop lexico
+    set<string> bag; //conjunto de variaveis declaradas pelo seu identificador
     
 
 public:
-    Lexical *l;
+    Lexical *l; //uma instancia de um analisador lexico
     
-    Parser(const std::vector<std::string>& cmd_table, const string&);
+    Parser(const std::vector<std::string>& cmd_table, const string&); //constroi a tabela de palavras reservadas, e extrai uma lista de tokens via analise lexica
 
 
-    bool start();
+    bool start(); //realiza o parser em si
 
 
     int getLine() { return line;}
