@@ -4,10 +4,12 @@
 #include "lexical.h"
 #include <string>
 #include <vector>
+#include <set>
 
 using std::vector;
 using std::string;
 using std::pair;
+using std::set;
 
 class Parser {
 private:
@@ -40,9 +42,26 @@ private:
     bool lista_arg();
     bool argumentos();
     
+    //ERROS
+    enum {
+        PONTO_VERGULA,
+        ESTRUTURA,
+        TIPO,
+        DOIS_PONTOS,
+        IDENT,
+        LOOP,
+        VAR
+
+    };
+
+    void pError(int);
+
     int line;
     int index;
+    bool scannerError;
     vector<pair<string, string>> v;
+    set<string> bag;
+    
 
 public:
     Lexical *l;

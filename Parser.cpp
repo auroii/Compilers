@@ -6,10 +6,12 @@
 #include <vector>
 
 using std::cerr;
+using std::cout;
 using std::vector;
 #define D(x) cerr << #x << " " << x << '\n'
 
 #define token second
+#define name first
 
 using std::string;
 
@@ -17,16 +19,34 @@ typedef std::pair<string, string> SS;
 
 Parser::Parser(const std::vector<std::string>& cmd_table, const string& src) {
     line = 0;
+    scannerError = false;   
     l = new Lexical(cmd_table);
+    if(l->brackets_balance(src) == false) scannerError = true;
     SS it;
     int pointer = 0;
     index = 0;
-    while(true) {
+    while(!scannerError) {
+        
         it = l->analyser(src, pointer);
-        if(!it.token.empty() && it.token != "-1") v.push_back(it);
-        else if(it.token == "-1") break;
+        if(it.token.empty()) line++;
+        //D(it.token);  
+        if(!it.token.empty() && it.token[0] == 'E') {
+            cout << it.token << " linha: " << line << '\n';
+           
+            scannerError = true;
+        }
+        //cout << it.first << '\n';
+        if(!it.token.empty() && it.token != "-1") {
+            if(it.token == "end" || it.token == "begin" || it.token == "}" || it.token == "do" || it.token == "then") line++;
+            if(it.token == ";" && v.back().token != "end") line++;
+            v.push_back(it);
+        }
+        
+        if(it.token == "-1") break;
     }
 
+    if(!scannerError) cerr << "SCANNER SUCCESS\n";
+    line = 0;
 }
 
 
@@ -35,7 +55,22 @@ void Parser::Get(SS & curr) {
     else curr = {"", "-1"};
 }
 
+
+void Parser::pError(int err) {
+    cout << "ERRO SINTATICO LINHA: " << line;
+
+    if(err == PONTO_VERGULA) cout << "  ponto e virgula\n";
+    if(err == ESTRUTURA) cout << "  estrutura de declaracao errada\n";
+    if(err == TIPO) cout << " tipo mal escrito/errado\n";
+    if(err == IDENT) cout << " erro identificador\n";
+    if(err == VAR) cout << " erro declaracao de variavel\n";
+    if(err == LOOP) cout << " erro no loop\n";
+    if(err == DOIS_PONTOS) cout << "dois pontos\n";
+}
+
+
 bool Parser::start() {
+    if(scannerError) return false;
     SS p, i, pv;
     Get(p);
     Get(i);
@@ -47,6 +82,7 @@ bool Parser::start() {
         line++;
         return corpo();
     }
+    pError(ESTRUTURA);
     return false;
 }
 
@@ -55,13 +91,18 @@ bool Parser::corpo() {
     if(!DC()) return false;
     Get(beg);
     D(beg.token);
-    if(beg.token != "begin") return false;
-
+    if(beg.token != "begin") {
+        pError(ESTRUTURA);
+        return false;
+    }
+    line++;
 
 
     if(!comandos()) return false;
     Get(end);
     if(end.token == "end") return true;
+    pError(ESTRUTURA);
+    line++;
     return false;
 }
 
@@ -74,7 +115,11 @@ bool Parser::tipo_var() {
     SS type;
     Get(type);
     D(type.token);
-    return (type.token == "integer" || type.token == "real");
+    if(type.token == "integer" || type.token == "real") return true;
+    else {
+        pError(TIPO);
+        return false;
+    }
 }
 
 
@@ -88,15 +133,27 @@ bool Parser::corpo_p() {
     SS beg;
     Get(beg);
     D(beg.token);
-    if(beg.token != "begin") return false;
+    if(beg.token != "begin") {
+        pError(ESTRUTURA);
+        return false;
+    }
+    line++;
     if(!comandos()) return false;
     SS end;
     Get(end);
     D(end.token);
-    if(end.token != "end") return false;
+    if(end.token != "end") {
+        pError(ESTRUTURA);   
+        return false;
+    }
+    line++;
     SS pv;
     Get(pv);
-    return (pv.token == ";");
+    if(pv.token == ";") return true;
+    else {
+        pError(PONTO_VERGULA);
+        return false;
+    }
 }
 
 
@@ -111,11 +168,17 @@ bool Parser::DCP() {
     SS Id;
     Get(Id);
     D(Id.token);
-    if(Id.token != "Id" || !parametros()) return false;
+    bag.insert(Id.name);
+    if(Id.token != "Id" || !parametros()) {
+        if(Id.token != "Id") pError(IDENT);    
+        return false;
+    }
     Get(p);
-    if(p.token != ";" || !corpo_p()) return false;
-
-
+    if(p.token != ";" || !corpo_p()) {
+        if(p.token != ";") pError(PONTO_VERGULA); 
+        return false;
+    }
+    line++;
     return DCP();
 
 }
@@ -139,7 +202,10 @@ bool Parser::lista_par() {
     if(!variaveis()) return false;
     SS dp;
     Get(dp);
-    if(dp.token != ":") return false;
+    if(dp.token != ":") {
+        pError(DOIS_PONTOS);
+        return false;
+    }
     return (tipo_var() && mais_par());
 }
 
@@ -168,9 +234,11 @@ bool Parser::DCC() {
     Get(eq);
     Get(n);
     D(c.token);
+
     D(n.token);
     D(eq.token);
     if(c.token != "Id" || eq.token != "=" || (n.token != "real" && n.token != "integer")) {
+        pError(ESTRUTURA);
         return false;
     }
     SS pv;
@@ -193,12 +261,18 @@ bool Parser::DCV() {
     SS dp;
     Get(dp);
     D(dp.token);
-    if(dp.token != ":") return false;
+    if(dp.token != ":") {
+        pError(DOIS_PONTOS);
+        return false;
+    }
     if(!tipo_var()) return false;
     SS pv;
     Get(pv);
     D(pv.token);
-    if(pv.token != ";") return false;
+    if(pv.token != ";") {
+        pError(PONTO_VERGULA);
+        return false;
+    }
     return DCV();
 }
 
@@ -206,6 +280,7 @@ bool Parser::variaveis() {
     SS id;
     Get(id);
     if(id.token == "Id") return mais_var();
+    pError(IDENT);
     return false;
 }
 
@@ -229,7 +304,10 @@ bool Parser::comandos() {
     SS pv;
     Get(pv);
     D(pv.token);
-    if(pv.token != ";") return false;
+    if(pv.token != ";") {
+        pError(PONTO_VERGULA);
+        return false;
+    }
     SS test;
     Get(test);
     D(test.token);
@@ -253,7 +331,10 @@ bool Parser::cmd() {
         SS th;
         Get(th);
         D(th.token);
-        if(th.token != "then" || !(cmd() && pfalsa())) return false;
+        if(th.token != "then" || !(cmd() && pfalsa())) {
+            if(th.token != "then") pError(ESTRUTURA);   
+            return false;
+        }
         return true;
     }
 
@@ -261,7 +342,9 @@ bool Parser::cmd() {
         if(!comandos()) return false;
         SS e;
         Get(e);
-        return (e.token == "end");
+        if(e.token == "end") return true;
+        pError(ESTRUTURA);
+        return false;
     }
 
 
@@ -284,7 +367,10 @@ bool Parser::cmd() {
         SS d;
         Get(d);
         D(d.token);
-        if(d.token != "do" && bo.token != "(" || bc.token != ")") return false; 
+        if(d.token != "do" && bo.token != "(" || bc.token != ")") {
+            pError(ESTRUTURA);
+            return false;
+        } 
         return cmd();
     }
 
@@ -308,19 +394,28 @@ bool Parser::cmd() {
         Get(rr);
         D(i.token);
         D(rr.token);
-        if(i.token != "Id" || rr.token != ":=") return false;
-
+        if(i.token != "Id" || rr.token != ":=") {
+            pError(LOOP);
+            return false;
+        }
         if(!expressao()) return false;
 
         SS tt;
         Get(tt);
         D(tt.token);
-        if(tt.token != "to" || !expressao()) return false;
-        
+        if(tt.token != "to" || !expressao()) {
+            if(tt.token != "to") {
+                pError(ESTRUTURA);
+            }   
+            return false;
+        }
         SS d;
         Get(d);
         D(d.token);
-        if(d.token != "do") return false;
+        if(d.token != "do") {
+            pError(ESTRUTURA);
+            return false;
+        }
         return cmd();
     }
 

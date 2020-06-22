@@ -8,19 +8,32 @@
 #include "utils.h"
 #include <ctype.h>
 
+using std::cout;
 
 bool Lexical::brackets_balance(const std::string& source) {
 	int counter = 0; //contador que eh incrementado caso encontrar ( ou decrementado caso )
-
+	bool ret = true;
 	for(char ch : source) {
 		if(ch == '(') counter++;
 		else if(ch == ')') {
 			counter--;
-			if(counter < 0) return false; //se counter < zero, entao ha mais fechadas do que abertas
+			if(counter < 0) ret = false; //se counter < zero, entao ha mais fechadas do que abertas
 		}
 	}
-
-	return (counter == 0); //true se o numero de abertas for igual ao de fechadas
+	ret = ret && counter == 0;
+	if(!ret) cout << "ERRO: PARENTESES NAO BALANCEADOS\n";
+	counter = 0;
+	ret = true;
+	for(char ch : source) {
+		if(ch == '{') counter++;
+		else if(ch == '}') {
+			counter--;
+			if(counter < 0) ret = false; //se counter < zero, entao ha mais fechadas do que abertas
+		}
+	}	
+	ret = ret && counter == 0;
+	if(!ret) cout << "ERRO: COMENTARIOS NAO BALANCEADOS\n";
+	return ret;
 }
 
 //caso o primeiro caracter for um numero zero...nove
@@ -59,6 +72,10 @@ std::pair<std::string, std::string> Lexical::process_number(const std::string& s
 }
 
 
+bool testChar(char ch) {
+	return (('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z') || ('1' <= ch && ch <= '9'));
+}
+
 //caso o primeiro caracter seja uma letra do alfabeto latino
 std::pair<std::string, std::string> Lexical::process_string(const std::string& source, int& pointer) {
 	std::string buffer = ""; //inicializa a cadeia e le a primeira letra
@@ -69,7 +86,7 @@ std::pair<std::string, std::string> Lexical::process_string(const std::string& s
 		if(pointer < N) { //se o codigo nao chegou ao fim
 
 			//se o caracter for uma letra ou um numero, inserir no buffer
-			if(isalnum(source[pointer])) buffer += source[pointer++]; 
+			if(testChar(source[pointer])) buffer += source[pointer++]; 
 			//se for um simbolo especial ou caracter transparente, encerrar tokenizacao
 			else if(is_ssymbol(source[pointer]) || isspace(source[pointer])) {
 				//verifica se eh palavra reservada
@@ -197,10 +214,12 @@ std::pair<std::string, std::string> Lexical::analyser(const std::string& source,
 	if(isdigit(source[pointer])) { //se o primeiro caracter for um digito numerico
 		return process_number(source, pointer);
 	}  
-	else if(isalpha(source[pointer])) {//se o primeiro caracter for uma letra do alfabeto
+	else if(testChar(source[pointer])) {//se o primeiro caracter for uma letra do alfabeto
 		return process_string(source, pointer);
 	} else if(is_ssymbol(source[pointer])) { //se o primeiro caracter for especial
 		return process_ssymbols(source, pointer);
+	} else {
+		return {"", "ERRO: CARACTER NAO PERMITIDO"};
 	}
 	
 

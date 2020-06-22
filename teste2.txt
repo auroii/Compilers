@@ -5,10 +5,10 @@ procedure nomep(x: real);
 begin
 read(a,b);
 if a<b+x then
-a:=b+2.x10
+a:=b+2.10
 else b:=a+x;
 end;
 begin {programa principal}
-read(a,@);
+read(a,2);
 nomep(a);
 end.
