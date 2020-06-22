@@ -28,7 +28,9 @@ int main(int argc, char **argv) {
 	int pointer = 0;//ponteiro que indica a posicao atual no programa
 	std::pair<std::string, std::string> p;
 	
-	std::cerr << pa->start() << '\n';
+	if(pa->start()) {
+		std::cout << "PARSER SUCCESS\n";
+	}
 	
 	/*std::list<std::pair<std::string, std::string>> token_table; //lista de pares (cadeia, token)
 	//loop para ir recuperando de token em token 

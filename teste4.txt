@@ -3,5 +3,5 @@ program maisumteste;
 var i, a: integer;
 begin
 for i:=1 to 5 do
-readd(a,@,1);
+readd(a,2,1);
 end.

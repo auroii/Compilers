@@ -18,8 +18,8 @@ private:
     bool corpo();
     bool DC();
     bool DCV();
-    bool variaveis();
-    bool mais_var();
+    bool variaveis(int op = 0);
+    bool mais_var(int op = 0);
     bool comandos();
     bool cmd();
     bool expressao();
@@ -33,9 +33,9 @@ private:
     bool DCC();
     bool DCP();
     bool tipo_var();
-    bool parametros();
-    bool lista_par();
-    bool mais_par();
+    bool parametros(int op = 0);
+    bool lista_par(int op = 0);
+    bool mais_par(int op = 0);
     bool corpo_p();
     bool DC_loc();
     bool mais_ident();
@@ -50,7 +50,8 @@ private:
         DOIS_PONTOS,
         IDENT,
         LOOP,
-        VAR
+        VAR,
+        OPERADOR
 
     };
 

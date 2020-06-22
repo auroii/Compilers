@@ -73,7 +73,7 @@ std::pair<std::string, std::string> Lexical::process_number(const std::string& s
 
 
 bool testChar(char ch) {
-	return (('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z') || ('1' <= ch && ch <= '9'));
+	return (('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z') || ('0' <= ch && ch <= '9'));
 }
 
 //caso o primeiro caracter seja uma letra do alfabeto latino

@@ -2,6 +2,6 @@ program teste3;{teste 3 - testando erro de comentário não fechado, checando comp
 var x: integer;
 begin
 read(a);
-{lendo a variável e imprimindo
+{lendo a variável e imprimindo}
 write(x);
 end.
